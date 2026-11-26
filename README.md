@@ -132,9 +132,6 @@ docker compose logs frontend
 ```
 
 ### 7. Compléter le dépôt et remettre
-
-Inclure le code fourni, les trois Dockerfiles, les trois `.dockerignore`, `compose.yaml`, `worker/requirements.txt`, `.gitignore` et ce README complété.
-
 Informations de remise :
 
 - **Étudiant :** Clément BOUNAIX.
