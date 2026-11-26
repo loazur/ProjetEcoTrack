@@ -141,11 +141,6 @@ Informations de remise :
 - **Groupe :** B2.
 - **Lancement :** `docker compose up -d --build`.
 - **Arrêt :** `docker compose down` (conserve les données).
-- **Preuves à joindre :** sorties de `/status`, analyse de `[10,20,30]` et résultat dans `/history` avant et après redémarrage, configuration/inspection des réseaux, et vérification de lecture du secret sans en révéler la valeur.
-
-Exclure db_password.txt, .env, .venv et node_modules. Après un nouveau clonage, un lecteur doit pouvoir recréer le secret et démarrer l’application.
-
-Déposer le lien du dépôt GitLab dans le devoir Moodle avant l’échéance annoncée. Donner accès à l’enseignante.
 
 ### Endpoints fournis
 
