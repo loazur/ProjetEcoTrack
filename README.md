@@ -157,3 +157,59 @@ Déposer le lien du dépôt GitLab dans le devoir Moodle avant l’échéance an
 | api | GET /status | Vérifier PostgreSQL et worker |
 | api | POST /analyze | Calculer via Python et enregistrer |
 | api | GET /history | Lire les 50 derniers résultats |
+
+### 8. Preuves de fonctionnement
+
+Sorties obtenues avec `docker compose up -d --build` le 26 novembre 2026. La valeur du secret n’est jamais affichée.
+
+**État des services**
+
+```text
+$ curl -fsS http://localhost:5000/health
+{"status":"ok"}
+
+$ curl -fsS http://localhost:5000/status
+{"api":"ok","db":"ok","worker":"ok"}
+
+$ docker compose exec -T worker python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8000/health').read().decode())"
+{"status":"ok"}
+```
+
+**Analyse et enregistrement**
+
+```text
+$ curl -fsS -X POST http://localhost:5000/analyze -H 'Content-Type: application/json' -d '{"numbers":[10,20,30]}'
+{"id":4,"numbers":[10,20,30],"average":20,"maximum":30,"created_at":"2026-11-26T10:57:16.454Z"}
+```
+
+L’entrée `id: 4` apparaît dans `/history` avant et après le redémarrage :
+
+```json
+{"id":4,"numbers":[10,20,30],"average":20,"maximum":30,"created_at":"2026-11-26T10:57:16.454Z"}
+```
+
+Après `docker compose restart`, `/status` renvoie encore :
+
+```json
+{"api":"ok","db":"ok","worker":"ok"}
+```
+
+**Réseaux et ports**
+
+```text
+$ docker compose config -q
+# Code de sortie : 0
+
+$ docker network inspect projetecotrack_reseau_interne projetecotrack_reseau_public --format '{{.Name}} internal={{.Internal}} containers={{range .Containers}}{{.Name}} {{end}}'
+projetecotrack_reseau_interne internal=true containers=projetecotrack-api-1 projetecotrack-db-1 projetecotrack-worker-1
+projetecotrack_reseau_public internal=false containers=projetecotrack-api-1 projetecotrack-frontend-1
+```
+
+Dans `docker compose ps -a`, seuls les ports frontend `3000` et API `5000` sont publiés sur l’hôte. PostgreSQL (`5432/tcp`) et worker (`8000/tcp`) n’ont pas de correspondance vers un port hôte.
+
+**Lecture du secret sans révéler sa valeur**
+
+```text
+$ docker compose exec -T api sh -c 'test -r "$POSTGRES_PASSWORD_FILE" && echo "secret lisible par l’API"'
+secret lisible par l’API
+```
