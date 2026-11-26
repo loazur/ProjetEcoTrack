@@ -1,0 +1,8 @@
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.env
+db_password.txt
+frontend/public/app.js
+.DS_Store

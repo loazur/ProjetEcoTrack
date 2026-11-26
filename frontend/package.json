@@ -1,0 +1,16 @@
+{
+  "name": "frontend-cours",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "esbuild src/index.jsx --bundle --outfile=public/app.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.0"
+  }
+}
